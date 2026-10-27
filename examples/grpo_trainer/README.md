@@ -117,7 +117,15 @@ with `gpu_memory_utilization=0.45`, `max_response_length=3072`, micro-batch=1, a
 (the defaults OOM or stall on a single card).
 
 Tested stack: torch 2.8.0+cu128, vllm 0.11.0, verl v0.8.0; 20-step smoke and a 600-step
-run both fit at ~18-20 GB peak.
+run both fit at ~18-20 GB peak. This measurement is scoped to **v0.8.0**: `main` currently pins
+newer torch/vLLM versions, so some config keys or values may need adjustment when running on the
+current revision.
+
+`DATA` must follow the default `NaiveRewardManager` schema: each row needs `prompt`,
+`data_source` (e.g. `math`), and `reward_model.ground_truth`. The script sets
+`trainer.total_epochs` only as a guard (default 100) so `STEPS` controls the run; the dataset
+needs at least `STEPS * train_batch_size` rows (300 * 4 = 1,200 by default) to finish within one
+epoch.
 
 
 ## Reference
